@@ -1,160 +1,334 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Birthday quest</title>
-  <style>
-    :root{
-      --brick-red:#e53935; --brick-yellow:#fdd835; --brick-blue:#1e88e5; --brick-green:#43a047;
-      --card-radius:18px; --gap:14px; font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#fbfdff 0%,#f7f8fb 100%);-webkit-font-smoothing:antialiased}
-    .app{max-width:480px;margin:24px auto;padding:18px;position:relative}
-    .stage{min-height:560px;background:linear-gradient(180deg,#ffffff,#fbfbff);border-radius:26px;padding:20px;box-shadow:0 10px 30px rgba(20,30,60,0.06);position:relative;overflow:hidden}
-    h1{font-size:20px;margin:0 0 20px 0}
-    .screen{display:none;animation:fadeIn .35s ease both}
-    .screen.active{display:block}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Birthday quest</title>
+    <style>
+        :root {
+            --brick-red: #e53935;
+            --brick-yellow: #fdd835;
+            --brick-blue: #1e88e5;
+            --brick-green: #43a047;
+            --card-radius: 18px;
+            --gap: 14px;
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
 
-    .code-inputs{display:flex;gap:10px;justify-content:center;margin:18px 0}
-    .code-inputs input{width:56px;height:64px;font-size:28px;font-weight:700;border-radius:12px;border:3px solid rgba(0,0,0,0.06);text-align:center;background:linear-gradient(180deg,#fff,#f3f6ff)}
-    .btn{display:inline-block;padding:10px 16px;border-radius:12px;background:var(--brick-blue);color:white;font-weight:600;border:none;cursor:pointer;margin-top:10px}
-    .btn:disabled{opacity:0.5;cursor:not-allowed}
+        * {
+            box-sizing: border-box
+        }
 
-    .hint-list{margin-top:12px;line-height:1.6}
-    .hint-list div{margin-bottom:4px}
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(180deg, #fbfdff 0%, #f7f8fb 100%);
+            -webkit-font-smoothing: antialiased
+        }
 
-    .riddle-list{display:grid;grid-template-columns:1fr;gap:10px}
-    .riddle-item{display:flex;gap:10px;align-items:center}
-    .riddle-item input{flex:1;padding:12px;border-radius:10px;border:2px solid rgba(0,0,0,0.06);font-size:15px}
-    .riddle-item.ok input{border-color:var(--brick-green);background:linear-gradient(180deg,#f6ffef,#f0fff2)}
+        .app {
+            max-width: 480px;
+            margin: 24px auto;
+            padding: 18px;
+            position: relative
+        }
 
-    .image-box{height:180px;border-radius:12px;background:linear-gradient(180deg,#fff,#fcfcff);display:flex;align-items:center;justify-content:center;border:2px dashed rgba(0,0,0,0.06);margin-bottom:14px}
+        .stage {
+            min-height: 560px;
+            background: linear-gradient(180deg, #ffffff, #fbfbff);
+            border-radius: 26px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(20, 30, 60, 0.06);
+            position: relative;
+            overflow: hidden
+        }
 
-    .success{padding:16px;border-radius:12px;background:linear-gradient(90deg,#a5f3fc,#b7f5d0);text-align:center;font-weight:700;margin-top:10px}
+        h1 {
+            font-size: 20px;
+            margin: 0 0 20px 0
+        }
 
-    .shake{animation:shake .45s}
-    @keyframes shake{10%{transform:translateX(-6px)}30%{transform:translateX(6px)}50%{transform:translateX(-4px)}70%{transform:translateX(4px)}90%{transform:none}}
-  </style>
+        .screen {
+            display: none;
+            animation: fadeIn .35s ease both
+        }
+
+        .screen.active {
+            display: block
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .code-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 18px 0
+        }
+
+        .code-inputs input {
+            width: 56px;
+            height: 64px;
+            font-size: 28px;
+            font-weight: 700;
+            border-radius: 12px;
+            border: 3px solid rgba(0, 0, 0, 0.06);
+            text-align: center;
+            background: linear-gradient(180deg, #fff, #f3f6ff)
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: var(--brick-blue);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed
+        }
+
+        .hint-list {
+            margin-top: 12px;
+            line-height: 1.6
+        }
+
+        .hint-list div {
+            margin-bottom: 4px
+        }
+
+        .riddle-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px
+        }
+
+        .riddle-item {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .riddle-item input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.06);
+            font-size: 15px
+        }
+
+        .riddle-item.ok input {
+            border-color: var(--brick-green);
+            background: linear-gradient(180deg, #f6ffef, #f0fff2)
+        }
+
+        .image-box {
+            height: 180px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #fff, #fcfcff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed rgba(0, 0, 0, 0.06);
+            margin-bottom: 14px
+        }
+
+        .success {
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #a5f3fc, #b7f5d0);
+            text-align: center;
+            font-weight: 700;
+            margin-top: 10px
+        }
+
+        .shake {
+            animation: shake .45s
+        }
+
+        @keyframes shake {
+            10% {
+                transform: translateX(-6px)
+            }
+
+            30% {
+                transform: translateX(6px)
+            }
+
+            50% {
+                transform: translateX(-4px)
+            }
+
+            70% {
+                transform: translateX(4px)
+            }
+
+            90% {
+                transform: none
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="stage" role="application">
+    <div class="app">
+        <div class="stage" role="application">
 
-      <!-- SCREEN 0 -->
-      <section id="screen-0" class="screen active" data-screen="0">
-        <h1>You've got mail!</h1>
-        <p>I hope you already got your props and ready to start?<br>No? Then what are you waiting for!<br></p>
-        <p>Once you have everything type: “I have everything”</p>
-        <input id="startInput" placeholder="Type here..." style="width:100%;padding:12px;border-radius:10px;border:2px solid rgba(0,0,0,0.06);font-size:15px;margin-top:10px">
-        <button class="btn" id="startConfirm">Confirm</button>
-      </section>
+            <!-- SCREEN 0 -->
+            <section id="screen-0" class="screen active" data-screen="0">
+                <h1>You've got mail!</h1>
+                <p>I hope you already got your props and ready to start?<br>No? Then what are you waiting for!<br></p>
+                <p>Once you have everything type: “I have everything”</p>
+                <input id="startInput" placeholder="Type here..."
+                    style="width:100%;padding:12px;border-radius:10px;border:2px solid rgba(0,0,0,0.06);font-size:15px;margin-top:10px">
+                <button class="btn" id="startConfirm">Confirm</button>
+            </section>
 
-      <!-- SCREEN 1 -->
-      <section id="screen-1" class="screen" data-screen="1">
-        <h1>See you</h1>
-        <p>Go here: <a id="coordsLink" href="https://www.google.com/maps?q=52.507870,13.302434" target="_blank">52.507870, 13.302434</a></p>
-        <div class="code-inputs" id="codeInputs">
-          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c1">
-          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c2">
-          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c3">
-          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c4">
-        </div>
-        <div class="hint-list">
-          <div>1. yellow eye</div>
-          <div>2. blue eye</div>
-          <div>3. left arm</div>
-          <div>4. right arm</div>
-        </div>
-        <button class="btn" id="confirmCode">Confirm</button>
-      </section>
+            <!-- SCREEN 1 -->
+            <section id="screen-1" class="screen" data-screen="1">
+                <h1>What could this be?</h1>
+                <!--<p>Go here: <a id="coordsLink" href="https://www.google.com/maps?q=52.507870,13.302434" target="_blank">52.507870, 13.302434</a></p> -->
+                <div class="code-inputs" id="codeInputs">
+                    <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c1">
+                    <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c2">
+                    <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c3">
+                    <input inputmode="numeric" pattern="[0-9]*" maxlength="1" id="c4">
+                </div>
+                <div class="hint-list">
+                    <div>1. red flags</div>
+                    <div>2. wheels</div>
+                    <div>3. i</div>
+                    <div>4. beaks</div>
+                </div>
+                <button class="btn" id="confirmCode">Confirm</button>
+            </section>
 
-      <!-- SCREEN 2 -->
-      <section id="screen-2" class="screen" data-screen="2">
-        <h1>Coloured bricks</h1>
-        <div class="image-box" id="screen2Image" aria-hidden="true">
-          <img src="images/colored-bricks.png" alt="Colored bricks" style="max-width:100%;max-height:100%;border-radius:12px;">
-        </div>
-        <p>Open envelope 1 from side L. This will help you figure out where to go.</p>
-        <p>Once you are there, find 4 hints on the location. Figure out names and enter them below with numbers.</p>
-        <p>Solve 4/4:<p>
-        <div class="riddle-list" id="riddleList">
-          <div class="riddle-item"><input placeholder="Riddle 1" data-index="0"><button class="btn smallConfirm">OK</button></div>
-          <div class="riddle-item"><input placeholder="Riddle 2" data-index="1"><button class="btn smallConfirm">OK</button></div>
-          <div class="riddle-item"><input placeholder="Riddle 3" data-index="2"><button class="btn smallConfirm">OK</button></div>
-          <div class="riddle-item"><input placeholder="Riddle 4" data-index="3"><button class="btn smallConfirm">OK</button></div>
-        </div>
-      </section>
+            <!-- SCREEN 2 -->
+            <section id="screen-2" class="screen" data-screen="2">
+                <h1>Construction site</h1>
+                <div class="image-box" id="screen2Image" aria-hidden="true">
+                    <img src="images/colored-bricks.png" alt="Colored bricks"
+                        style="max-width:100%;max-height:100%;border-radius:12px;">
+                </div>
+                <p>Open yellow envelope. What's inside will help you figure out where to go.</p>
+                <p>Once you are there, find 4 hints on the location. Figure out what could this be and enter names below
+                    with numbers. Example: word123</p>
+                <p>Solve 3/4:
+                <p>
+                <div class="riddle-list" id="riddleList">
+                    <div class="riddle-item"><input placeholder="Riddle 1" data-index="0"><button
+                            class="btn smallConfirm">OK</button></div>
+                    <div class="riddle-item"><input placeholder="Riddle 2" data-index="1"><button
+                            class="btn smallConfirm">OK</button></div>
+                    <div class="riddle-item"><input placeholder="Riddle 3" data-index="2"><button
+                            class="btn smallConfirm">OK</button></div>
+                    <div class="riddle-item"><input placeholder="Riddle 4" data-index="3"><button
+                            class="btn smallConfirm">OK</button></div>
+                </div>
+            </section>
 
-      <!-- SCREEN 3 -->
-      <section id="screen-3" class="screen" data-screen="3">
-        <h1>Hidden place</h1>
-        <p>Now you are ready to move to the final stage of the quest. The image should help you find the location nearby. </p>
-        <div class="image-box" id="screen3Image" aria-hidden="true">
-            <img src="images/ai2.png" alt="Riddle" style="max-width:100%;max-height:100%;border-radius:12px;">
-        </div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <input id="storeAnswer" placeholder="Enter location name to check" style="flex:1;padding:12px;border-radius:10px;border:2px solid rgba(0,0,0,0.06);font-size:15px">
-          <button class="btn" id="storeCheck">Check</button>
-        </div>
-        <div id="finalMessage" style="display:none" class="success">🎉 You found the final location! Let's go there </div>
-      </section>
+            <!-- SCREEN 3 -->
+            <section id="screen-3" class="screen" data-screen="3">
+                <h1>Final step</h1>
+                <p>Now you are ready to move to the final stage of the quest. The image should help you find the
+                    location nearby. </p>
+                <div class="image-box" id="screen3Image" aria-hidden="true">
+                    <img src="images/ai2.png" alt="Riddle" style="max-width:100%;max-height:100%;border-radius:12px;">
+                </div>
+                <div style="display:flex;gap:10px;align-items:center">
+                    <input id="storeAnswer" placeholder="Enter the location name to check"
+                        style="flex:1;padding:12px;border-radius:10px;border:2px solid rgba(0,0,0,0.06);font-size:15px">
+                    <button class="btn" id="storeCheck">Check</button>
+                </div>
+                <div id="finalMessage" style="display:none" class="success">🎉 You found the final location!</div>
+            </section>
 
+        </div>
     </div>
-  </div>
 
-  <script>
-    (function(){
-      const correctCode = '5377';
-      const allowed = ['microsoft','mastercard','hogwarts','harry potter','apple','google'];
-      let matched = new Set();
+    <script>
+        (function () {
+            const correctCode1 = '2842';
+            const correctCode2 = '2642';
+            const allowed = ['microsoft573', 'windows573', 'mastercard734', 'hogwarts821', 'harrypotter821', 'harry potter821', 'matrix269', 'the matrix269', 'thematrix269'];
+            let matched = new Set();
 
-      function showScreen(n){
-        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-        document.querySelector('[data-screen="'+n+'"]').classList.add('active');
-      }
+            function showScreen(n) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.querySelector('[data-screen="' + n + '"]').classList.add('active');
+            }
 
-      document.getElementById('startConfirm').addEventListener('click', ()=>{
-        const val = document.getElementById('startInput').value.trim().toLowerCase();
-        if(val==='i have everything') showScreen(1);
-        else { const input = document.getElementById('startInput'); input.classList.add('shake'); setTimeout(()=>input.classList.remove('shake'),400); }
-      });
+            document.querySelectorAll('#codeInputs input').forEach((input, index, inputs) => {
+                input.addEventListener('input', () => {
+                    if (input.value.length === input.maxLength && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
 
-      document.getElementById('confirmCode').addEventListener('click', ()=>{
-        const val = [document.getElementById('c1').value,document.getElementById('c2').value,document.getElementById('c3').value,document.getElementById('c4').value].join('');
-        if(val===correctCode) { showScreen(2); initScreen2(); }
-        else { const wrap = document.getElementById('codeInputs'); wrap.classList.add('shake'); setTimeout(()=>wrap.classList.remove('shake'),460); }
-      });
+            document.getElementById('startConfirm').addEventListener('click', () => {
+                const val = document.getElementById('startInput').value.trim().toLowerCase();
+                if (val === 'i have everything') showScreen(1);
+                else { const input = document.getElementById('startInput'); input.classList.add('shake'); setTimeout(() => input.classList.remove('shake'), 400); }
+            });
 
-      function initScreen2(){
-        matched = new Set();
-        document.querySelectorAll('.riddle-item').forEach(row=>{
-          const input=row.querySelector('input');
-          const btn=row.querySelector('button');
-          input.value=''; input.disabled=false; row.classList.remove('ok');
-          btn.onclick=()=>{
-            const v = input.value.trim().toLowerCase();
-            if(allowed.includes(v)&&!matched.has(v)){ matched.add(v); row.classList.add('ok'); input.disabled=true; }
-            else { input.classList.add('shake'); setTimeout(()=>input.classList.remove('shake'),400); }
-            if(matched.size>=3){ showScreen(3); initScreen3(); }
-          };
-        });
-      }
+            document.getElementById('confirmCode').addEventListener('click', () => {
+                const val = [document.getElementById('c1').value, document.getElementById('c2').value, document.getElementById('c3').value, document.getElementById('c4').value].join('');
+                if (val === correctCode1 || val === correctCode2) { showScreen(2); initScreen2(); }
+                else { const wrap = document.getElementById('codeInputs'); wrap.classList.add('shake'); setTimeout(() => wrap.classList.remove('shake'), 460); }
+            });
 
-      function initScreen3(){
-        const storeInput=document.getElementById('storeAnswer');
-        const checkBtn=document.getElementById('storeCheck');
-        const msg=document.getElementById('finalMessage');
-        storeInput.value=''; storeInput.disabled=false; checkBtn.disabled=false; msg.style.display='none';
-        checkBtn.onclick=()=>{
-          if(storeInput.value.trim().toLowerCase()==='flying colors'){ msg.style.display='block'; storeInput.disabled=true; checkBtn.disabled=true; }
-          else { storeInput.classList.add('shake'); setTimeout(()=>storeInput.classList.remove('shake'),400); }
-        };
-      }
+            function initScreen2() {
+                matched = new Set();
+                document.querySelectorAll('.riddle-item').forEach(row => {
+                    const input = row.querySelector('input');
+                    const btn = row.querySelector('button');
+                    input.value = ''; input.disabled = false; row.classList.remove('ok');
+                    btn.onclick = () => {
+                        const v = input.value.trim().toLowerCase();
+                        if (allowed.includes(v) && !matched.has(v)) { matched.add(v); row.classList.add('ok'); input.disabled = true; }
+                        else { input.classList.add('shake'); setTimeout(() => input.classList.remove('shake'), 400); }
+                        if (matched.size >= 3) { showScreen(3); initScreen3(); }
+                    };
+                });
+            }
 
-    })();
-  </script>
+            function initScreen3() {
+                const storeInput = document.getElementById('storeAnswer');
+                const checkBtn = document.getElementById('storeCheck');
+                const msg = document.getElementById('finalMessage');
+                storeInput.value = ''; storeInput.disabled = false; checkBtn.disabled = false; msg.style.display = 'none';
+                checkBtn.onclick = () => {
+                    if (storeInput.value.trim().toLowerCase() === 'flying colors') { msg.style.display = 'block'; storeInput.disabled = true; checkBtn.disabled = true; }
+                    else { storeInput.classList.add('shake'); setTimeout(() => storeInput.classList.remove('shake'), 400); }
+                };
+            }
+
+        })();
+    </script>
 </body>
+
 </html>
